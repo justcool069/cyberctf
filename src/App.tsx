@@ -36,7 +36,7 @@ export default function App() {
   const [allTeams, setAllTeams] = useState<Team[]>([]);
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [submissions, setSubmissions] = useState<SubmissionLog[]>([]);
-  const [stats, setStats] = useState<CTFStats>({
+  const [, setStats] = useState<CTFStats>({
     totalTeams: 0,
     totalChallenges: 0,
     prizePool: '$2,500',

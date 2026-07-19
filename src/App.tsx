@@ -54,9 +54,6 @@ export default function App() {
     appId: ''
   });
 
-  // Countdown States
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
   // Challenge filters
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -217,27 +214,6 @@ export default function App() {
     }
   }, []);
 
-  // Timer Countdown loop
-  useEffect(() => {
-    const calculateTimeLeft = () => {
-      const difference = +new Date(stats.eventEndTimestamp) - +new Date();
-      let newTimeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
-
-      if (difference > 0) {
-        newTimeLeft = {
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60)
-        };
-      }
-      setTimeLeft(newTimeLeft);
-    };
-
-    const timer = setInterval(calculateTimeLeft, 1000);
-    calculateTimeLeft();
-    return () => clearInterval(timer);
-  }, [stats.eventEndTimestamp]);
 
   const triggerToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
     setToast({ show: true, message, type });
@@ -642,23 +618,6 @@ export default function App() {
                 </p>
               </div>
 
-              {/* Countdown Timer Dashboard style */}
-              <div className="max-w-xl mx-auto grid grid-cols-4 gap-4 md:gap-6 py-6 font-mono">
-                {[
-                  { label: 'DAYS', val: timeLeft.days, color: 'text-[#00ff88]' },
-                  { label: 'HOURS', val: timeLeft.hours, color: 'text-[#00cfff]' },
-                  { label: 'MINUTES', val: timeLeft.minutes, color: 'text-[#bd00ff]' },
-                  { label: 'SECONDS', val: timeLeft.seconds, color: 'text-[#ff0055]' }
-                ].map((item, idx) => (
-                  <div key={idx} className="glass-card p-4 rounded-xl border border-white/10 flex flex-col justify-center bg-black/60 shadow-[inset_0_2px_10px_rgba(255,255,255,0.02)]">
-                    <span className={`text-3xl md:text-5xl font-black block font-mono ${item.color}`}>
-                      {String(item.val).padStart(2, '0')}
-                    </span>
-                    <span className="text-[10px] text-slate-500 tracking-wider mt-1">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-
               <div className="flex flex-wrap gap-4 justify-center pt-4">
                 {currentTeam ? (
                   <button 
@@ -687,11 +646,10 @@ export default function App() {
             </div>
 
             {/* Statistics */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
                 { label: 'REGISTERED TEAMS', val: allTeams.length || '3', color: 'text-[#00ff88]', glow: 'shadow-[0_0_20px_rgba(0,255,136,0.1)]' },
-                { label: 'LIVE CHALLENGE PACKS', val: challenges.length || '5', color: 'text-[#00cfff]', glow: 'shadow-[0_0_20px_rgba(0,207,255,0.1)]' },
-                { label: 'TOTAL PRIZE POOL', val: stats.prizePool, color: 'text-[#bd00ff]', glow: 'shadow-[0_0_20px_rgba(189,0,255,0.1)]' }
+                { label: 'LIVE CHALLENGE PACKS', val: challenges.length || '5', color: 'text-[#00cfff]', glow: 'shadow-[0_0_20px_rgba(0,207,255,0.1)]' }
               ].map((s, idx) => (
                 <div key={idx} className={`glass-card p-8 rounded-xl border border-white/5 text-center space-y-3 bg-black/40 ${s.glow}`}>
                   <span className="text-xs text-slate-500 font-mono tracking-widest block">{s.label}</span>

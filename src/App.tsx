@@ -196,7 +196,7 @@ export default function App() {
     // Sync active session if logged in
     const activeTeamId = sessionStorage.getItem('cyber_ctf_active_team_id');
     if (activeTeamId) {
-      const active = freshTeams.find(t => t.id === activeTeamId);
+      const active = freshTeams.find((t: Team) => t.id === activeTeamId);
       if (active) {
         setCurrentTeam(active);
       }
@@ -257,7 +257,7 @@ export default function App() {
     e.preventDefault();
     const { email } = authForm;
     const teams = await dbService.getTeams();
-    const match = teams.find(t => t.email.toLowerCase() === email.toLowerCase());
+    const match = teams.find((t: Team) => t.email.toLowerCase() === email.toLowerCase());
 
     if (match) {
       setCurrentTeam(match);

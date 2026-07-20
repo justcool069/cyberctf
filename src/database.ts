@@ -302,23 +302,34 @@ const DEFAULT_SUBMISSIONS: SubmissionLog[] = [];
 // ========================
 // LOCALSTORAGE INIT
 // ========================
-// Force reset challenges every time (to pick up new fields like solution/hintPenalty)
-localStorage.setItem('cyber_ctf_challenges', JSON.stringify(DEFAULT_CHALLENGES));
+// Initialize persisted data only once so registrations and submissions survive reloads.
+function initializeLocalStorageDefaults() {
+  if (!localStorage.getItem('cyber_ctf_challenges')) {
+    localStorage.setItem('cyber_ctf_challenges', JSON.stringify(DEFAULT_CHALLENGES));
+  }
 
-// Always reset saved teams and submission history for a fresh registration state
-localStorage.setItem('cyber_ctf_teams', JSON.stringify(DEFAULT_TEAMS));
-localStorage.setItem('cyber_ctf_submissions', JSON.stringify(DEFAULT_SUBMISSIONS));
-if (!localStorage.getItem('cyber_ctf_stats')) {
-  const eventEnd = new Date();
-  eventEnd.setDate(eventEnd.getDate() + 2);
-  const stats: CTFStats = {
-    totalTeams: 0,
-    totalChallenges: DEFAULT_CHALLENGES.length,
-    prizePool: '₹50,000 + Tech Gadgets',
-    eventEndTimestamp: eventEnd.toISOString()
-  };
-  localStorage.setItem('cyber_ctf_stats', JSON.stringify(stats));
+  if (!localStorage.getItem('cyber_ctf_teams')) {
+    localStorage.setItem('cyber_ctf_teams', JSON.stringify(DEFAULT_TEAMS));
+  }
+
+  if (!localStorage.getItem('cyber_ctf_submissions')) {
+    localStorage.setItem('cyber_ctf_submissions', JSON.stringify(DEFAULT_SUBMISSIONS));
+  }
+
+  if (!localStorage.getItem('cyber_ctf_stats')) {
+    const eventEnd = new Date();
+    eventEnd.setDate(eventEnd.getDate() + 2);
+    const stats: CTFStats = {
+      totalTeams: 0,
+      totalChallenges: DEFAULT_CHALLENGES.length,
+      prizePool: '₹50,000 + Tech Gadgets',
+      eventEndTimestamp: eventEnd.toISOString()
+    };
+    localStorage.setItem('cyber_ctf_stats', JSON.stringify(stats));
+  }
 }
+
+initializeLocalStorageDefaults();
 
 // ========================
 // DATABASE SERVICE
